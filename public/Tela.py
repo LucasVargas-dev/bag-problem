@@ -4,26 +4,26 @@ import numpy as np
 from random import getrandbits, randint, random, choice
 
 def individual(n_de_itens):
-    """Cria um membro da populacao"""
+    # Cria apenas um membro da população, faz o for para o número de itens
     return [ getrandbits(1) for x in range(n_de_itens) ]
 
 def population(n_de_individuos, n_de_itens):
-    """"Cria a populacao"""
+    # Cria a populacao 
     return [ individual(n_de_itens) for x in range(n_de_individuos) ]
 
 def fitness(individuo, peso_maximo, pesos_e_valores):
-    """Faz avaliacao do individuo"""
+    # Faz avaliacao do individuo, o fitness são os indivíduos de melhor performance
     peso_total, valor_total = 0, 0
     for indice, valor in enumerate(individuo):
         peso_total += (individuo[indice] * pesos_e_valores[indice][0])
         valor_total += (individuo[indice] * pesos_e_valores[indice][1])
 
-    if (peso_maximo - peso_total) < 0:
-        return -1 #retorna -1 no caso de peso excedido
-    return valor_total #se for um individuo valido retorna seu valor, sendo maior melhor
+    if (peso_maximo - peso_total) < 0: # filtra os válidos
+        return -1 # em caso de peso exceder o peso da mochila retorna -1
+    return valor_total # se for um individuo válido retorna seu valor, sendo maior melhor
 
 def media_fitness(populacao, peso_maximo, pesos_e_valores): #só leva em consideracao os elementos que respeitem o peso maximo da mochila
-    """Encontra a avalicao media da populacao"""
+    # Encontra a avalicao media da populacao, summed é como se refizesse os fitness e realizasse a soma, para no final dividir e obter a média
     summed = sum(fitness(x, peso_maximo, pesos_e_valores) for x in populacao if fitness(x, peso_maximo, pesos_e_valores) >= 0)
     return summed / (len(populacao) * 1.0)
 
@@ -56,7 +56,7 @@ def selecao_roleta(pais):
     return pai, mae
 
 def evolve(populacao, peso_maximo, pesos_e_valores, n_de_cromossomos, mutate=0.05): 
-    """Tabula cada individuo e o seu fitness"""
+    # Monta a tabela de cada individuo e o seu fitness, método principal
     pais = [ [fitness(x, peso_maximo, pesos_e_valores), x] for x in populacao if fitness(x, peso_maximo, pesos_e_valores) >= 0]
     pais.sort(reverse=True)
     
@@ -80,9 +80,9 @@ def evolve(populacao, peso_maximo, pesos_e_valores, n_de_cromossomos, mutate=0.0
     return filhos
 
 def calculos(pesos_e_valores, peso_maximo):
-    # pesos_e_valores = [[4, 30], [8, 10], [8, 30], [25, 75], \
-    #                [2, 10], [50, 100], [6, 300], [12, 50], \
-    #                [100, 400], [8, 300]]
+    # pesos_e_valores = [[6, 31], [9, 11], [8, 30], [29, 73], \
+    #                [26, 140], [50, 102], [5, 301], [18, 50], \
+    #                [19, 48], [81, 200]]
     # peso_maximo = 100
     n_de_cromossomos = 150
     geracoes = 80
