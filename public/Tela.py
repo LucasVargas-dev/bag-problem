@@ -194,4 +194,5 @@ class Tela:
             return False
         return True
 
+    
 minha_tela = Tela()
